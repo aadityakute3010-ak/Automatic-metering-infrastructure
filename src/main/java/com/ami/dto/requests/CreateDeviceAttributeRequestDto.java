@@ -1,14 +1,13 @@
 package com.ami.dto.requests;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 public class CreateDeviceAttributeRequestDto {
 
-    @NotBlank
-    private String attributeKey;
+    private Long attributeKeyId;
 
-    @NotBlank
-    private String attributeValue; 
+    private String attributeValue;
 }

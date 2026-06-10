@@ -1,7 +1,6 @@
 package com.ami.entity;
 
 import java.time.LocalDateTime;
-
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,13 +17,15 @@ public class DeviceAudit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "device_id")
+    private Device device;
+
     private String action;
 
     private String performedBy;
 
-    private LocalDateTime actionTime;
+    private String description;
 
-    @ManyToOne
-    @JoinColumn(name = "device_id")
-    private Device device;
+    private LocalDateTime actionTime;
 }

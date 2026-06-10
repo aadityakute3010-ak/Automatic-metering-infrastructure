@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import com.ami.entity.Device;
-import com.ami.entity.DeviceAttribute;
 import com.ami.enums.DeviceStatus;
 import com.ami.enums.SourceType;
 import com.ami.enums.TechnologyType;
@@ -67,6 +66,6 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
 
 	Page<Device> findByAssignedAdminIdAndActiveFalse(Long adminId, Pageable pageable);
 	
-	List<DeviceAttribute> findByDeviceId(Long deviceId); 
+	Optional<Device> findByDeviceId(String deviceId);
 
 }

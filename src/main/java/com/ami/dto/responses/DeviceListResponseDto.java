@@ -4,6 +4,7 @@ import com.ami.enums.BillingType;
 import com.ami.enums.DeviceStatus;
 import com.ami.enums.SourceType;
 import com.ami.enums.TechnologyType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,23 +22,25 @@ public class DeviceListResponseDto {
 
     private String deviceName;
 
+    private String meterName;
+
     private SourceType sourceType;
 
     private TechnologyType technologyType;
 
     private String serialNumber;
 
-    private DeviceStatus status;
-    
     private String macAddress;
+
+    private DeviceStatus status;
 
     private Boolean active;
 
     private Boolean online;
-    
-    private BillingType billingType; 
+
+    private BillingType billingType;
 
     private String assignedAdmin;
 
     private String assignedUser;
-} 
+}

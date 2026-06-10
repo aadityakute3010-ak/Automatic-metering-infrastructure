@@ -1,23 +1,23 @@
 package com.ami.dto.requests;
 
-import java.time.LocalTime;
-import com.ami.enums.AmrApplicationType;
+import com.ami.enums.ApplicationOfAmi;
 import com.ami.enums.BillingType;
-import com.ami.enums.ProtocolType;
+import com.ami.enums.DiameterSize;
+import com.ami.enums.AmiApplicationType;
 import com.ami.enums.SourceType;
 import com.ami.enums.TechnologyType;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor; 
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -29,8 +29,12 @@ public class CreateDeviceRequestDto {
     private String deviceId;
 
     @NotBlank(message = "Device name is required")
-    @Size(min = 3, max = 50, message = "Device name must be between 3 and 50 characters")
+    @Size(min = 3, max = 50)
     private String deviceName;
+
+    @NotBlank(message = "Meter name is required")
+    @Size(min = 3, max = 50)
+    private String meterName;
 
     @NotNull(message = "Technology type is required")
     private TechnologyType technologyType;
@@ -48,43 +52,17 @@ public class CreateDeviceRequestDto {
     @NotBlank(message = "Serial number is required")
     private String serialNumber;
 
-    @NotNull(message = "Billing Type is required")
-    private BillingType billingType;
-    
-    @NotBlank(message = "Firmware Version is required")
-    private String firmwareVersion;
+    // Optional Assignment
 
-    @NotNull(message = "Protocol Type is required")
-    private ProtocolType protocolType; 
-    
-    @NotNull(message = "OTA Updates flag is required")
-    private Boolean otaUpdatesEnabled;
-
-    @NotBlank(message = "Timezone is required")
-    private String timezone;
-
-    @NotNull(message = "Sample count is required")
-    @Min(value = 1, message = "Sample count must be at least 1")
-    @Max(value = 100, message = "Sample count cannot exceed 100")
-    private Integer sampleCount;
-
-    @NotNull(message = "Wakeup time is required")
-    private LocalTime wakeupTime;
-
-    @NotNull(message = "AMR Enable flag is required")
-    private Boolean amrEnabled;
-
-    @NotNull(message = "Assigned admin is required")
     private Long assignedAdminId;
 
     private Long assignedUserId;
 
-    @Positive(message = "Liter per pulse must be greater than 0")
-    private Double literPerPulse;
+    // Customer Information (Optional)
 
-    private String diameterSize;
+    private String customerName;
 
-    private String meterLocation;
+    private String customerAddress;
 
     private String buildingOrWing;
 
@@ -92,8 +70,29 @@ public class CreateDeviceRequestDto {
 
     private String zone;
 
+    private String city;
+
+    private String state;
+
+    private String meterLocation;
+    
+    @NotNull(message = "Billing Type is required")
+    private BillingType billingType; 
+
+    // Meter Configuration
+
+    @NotNull(message = "AMI Application Type is required")
+    private ApplicationOfAmi applicationOfAmi; 
+
+    @NotNull(message = "Meter Type is required")
+    private AmiApplicationType amiApplicationType;
+
+    @NotNull(message = "Diameter Size is required")
+    private DiameterSize diameterSize;
+
+    @Positive(message = "Liter per pulse must be greater than 0")
+    private Double literPerPulse;
+
     @PositiveOrZero(message = "Meter start reading cannot be negative")
     private Double meterStartReading;
-
-    private AmrApplicationType amrApplicationType;
 }

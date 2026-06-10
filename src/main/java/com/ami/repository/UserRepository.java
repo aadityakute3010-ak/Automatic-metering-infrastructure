@@ -37,12 +37,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Page<User> findByRoleAndCreatedBy(RoleType role, User createdBy, Pageable pageable);
 
 	Page<User> findByActiveAndCreatedBy(Boolean active, User createdBy, Pageable pageable);
-	
-	Page<User> findByActive(Boolean active,Pageable pageable); 
-	
-	
 
-	//SEARCH FOR ADMIN
+	Page<User> findByActive(Boolean active, Pageable pageable);
+
+	// SEARCH FOR ADMIN
 	@Query("""
 			    SELECT u FROM User u
 			    WHERE u.createdBy.id = :adminId
@@ -56,7 +54,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			""")
 	Page<User> searchUsersForAdmin(@Param("keyword") String keyword, @Param("adminId") Long adminId, Pageable pageable);
 
-	//SEARCH FOR SUPER ADMIN
+	// SEARCH FOR SUPER ADMIN
 	@Query("""
 			    SELECT u FROM User u
 			    WHERE
@@ -67,14 +65,28 @@ public interface UserRepository extends JpaRepository<User, Long> {
 			        OR LOWER(u.state) LIKE LOWER(CONCAT('%', :keyword, '%'))
 			""")
 	Page<User> searchUsersForSuperAdmin(@Param("keyword") String keyword, Pageable pageable);
-	
+
 	@Query("""
-		       SELECT DISTINCT u
-		       FROM User u
-		       JOIN u.assignedSources s
-		       WHERE u.role = :role
-		       AND s = :sourceType
-		       """)
-		List<User> findAdminsBySourceType(RoleType role,SourceType sourceType); 
+			SELECT DISTINCT u
+			FROM User u
+			JOIN u.assignedSources s
+			WHERE u.role = :role
+			AND s = :sourceType
+			""")
+	List<User> findAdminsBySourceType(RoleType role, SourceType sourceType);
+
+	@Query("""
+			    SELECT u FROM User u
+			    WHERE u.role = :role
+			    AND :sourceType MEMBER OF u.assignedSources
+			    AND (
+			        :search IS NULL OR
+			        LOWER(u.firstName) LIKE LOWER(CONCAT('%', :search, '%')) OR
+			        LOWER(u.lastName) LIKE LOWER(CONCAT('%', :search, '%')) OR
+			        LOWER(u.email) LIKE LOWER(CONCAT('%', :search, '%'))
+			    )
+			""")
+	List<User> findEligibleAdmins(@Param("role") RoleType role, @Param("sourceType") SourceType sourceType,
+			@Param("search") String search);
 
 }

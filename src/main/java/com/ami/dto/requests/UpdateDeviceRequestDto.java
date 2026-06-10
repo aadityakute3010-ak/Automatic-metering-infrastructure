@@ -1,37 +1,28 @@
 package com.ami.dto.requests;
 
-import java.time.LocalTime;
-import com.ami.enums.AmrApplicationType;
+import com.ami.enums.ApplicationOfAmi;
 import com.ami.enums.BillingType;
-import com.ami.enums.ProtocolType;
+import com.ami.enums.DiameterSize;
+import com.ami.enums.AmiApplicationType;
+
 import lombok.Data;
 
 @Data
 public class UpdateDeviceRequestDto {
 
+    // Device Information
+
     private String deviceName;
 
-    private String timezone;
-
-    private Integer sampleCount;
-
-    private LocalTime wakeupTime;
-
-    private String firmwareVersion;
-
-    private ProtocolType protocolType;
-
-    private Boolean otaUpdatesEnabled;
+    private String meterName;
 
     private BillingType billingType;
 
-    private Boolean amrEnabled;
+    // Customer Information
 
-    private Double literPerPulse;
+    private String customerName;
 
-    private String diameterSize;
-
-    private String meterLocation;
+    private String customerAddress;
 
     private String buildingOrWing;
 
@@ -39,5 +30,19 @@ public class UpdateDeviceRequestDto {
 
     private String zone;
 
-    private AmrApplicationType amrApplicationType;
+    private String city;
+
+    private String state;
+
+    private String meterLocation;
+
+    // Meter Configuration
+
+    private ApplicationOfAmi applicationOfAmi; 
+
+    private AmiApplicationType amiApplicationType;
+
+    private DiameterSize diameterSize;
+
+    private Double literPerPulse;
 }

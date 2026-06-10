@@ -12,5 +12,9 @@ public interface DeviceAttributeRepository extends JpaRepository<DeviceAttribute
 
     List<DeviceAttribute> findByDeviceId(Long deviceId);
 
-    boolean existsByDeviceIdAndAttributeKey(Long deviceId, String attributeKey); 
-}
+    boolean existsByDeviceIdAndAttributeKeyId(Long deviceId, Long attributeKeyId);
+    
+    boolean existsByAttributeKeyId(Long attributeKeyId);
+    
+    List<DeviceAttribute> findByDeviceId(String deviceId); 
+} 

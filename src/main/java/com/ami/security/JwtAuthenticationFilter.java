@@ -17,84 +17,76 @@ import java.io.IOException;
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
+	private final JwtUtil jwtUtil;
 
-    private final CustomUserDetailsService userDetailsService;
-    
-    private final BlacklistedTokenRepository blacklistedTokenRepository;
+	private final CustomUserDetailsService userDetailsService;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil,CustomUserDetailsService userDetailsService,
-    		BlacklistedTokenRepository blacklistedTokenRepository) {
-    	
-        this.jwtUtil = jwtUtil; 
+	private final BlacklistedTokenRepository blacklistedTokenRepository;
 
-        this.userDetailsService = userDetailsService;
+	public JwtAuthenticationFilter(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService,
+			BlacklistedTokenRepository blacklistedTokenRepository) {
 
-        this.blacklistedTokenRepository = blacklistedTokenRepository;
-    } 
+		this.jwtUtil = jwtUtil;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, 
-    		FilterChain filterChain) 
-    				throws ServletException, IOException {
- 
-        final String authHeader =
-                request.getHeader("Authorization");
+		this.userDetailsService = userDetailsService;
 
-        System.out.println("AUTH HEADER: " + authHeader);
+		this.blacklistedTokenRepository = blacklistedTokenRepository;
+	}
 
-        String email = null;
-        String token = null;
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+			throws ServletException, IOException {
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+		final String authHeader = request.getHeader("Authorization");
 
-            token = authHeader.substring(7);
-            
-            if (blacklistedTokenRepository.existsByToken(token) ) {
-                response.setStatus(
-                        HttpServletResponse.SC_UNAUTHORIZED
-                );
+		System.out.println("AUTH HEADER: " + authHeader);
 
-                response.getWriter().write(
-                        "Token has been logged out"
-                );
+		String email = null;
+		String token = null;
 
-                return;
-            }
+		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 
-            System.out.println("TOKEN: " + token);
+			token = authHeader.substring(7);
 
-            email = jwtUtil.extractEmail(token);
+			if (blacklistedTokenRepository.existsByToken(token)) {
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-            System.out.println("EMAIL FROM TOKEN: " + email);
-        }
+				response.getWriter().write("Token has been logged out");
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+				return;
+			}
 
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+			System.out.println("TOKEN: " + token);
 
-            if (jwtUtil.validateToken(token)) {
+			try {
+				email = jwtUtil.extractEmail(token);
+				System.out.println("EMAIL FROM TOKEN: " + email);
 
-                UsernamePasswordAuthenticationToken authToken =
-                        new UsernamePasswordAuthenticationToken(
-                                userDetails,
-                                null,
-                                userDetails.getAuthorities()
-                        );
+			} catch (Exception ex) {
+				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+				response.getWriter().write("Invalid or expired token");
+				return;
+			}
+		}
 
-                authToken.setDetails(
-                        new WebAuthenticationDetailsSource()
-                                .buildDetails(request)
-                );
+		if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authToken);
+			UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
-                System.out.println("USER AUTHENTICATED");
-            }
-        } 
+			if (jwtUtil.validateToken(token)) {
 
-        filterChain.doFilter(request, response);
-    }
-    
+				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(userDetails,
+						null, userDetails.getAuthorities());
+
+				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+				SecurityContextHolder.getContext().setAuthentication(authToken);
+
+				System.out.println("USER AUTHENTICATED");
+			}
+		}
+
+		filterChain.doFilter(request, response);
+	}
+
 }

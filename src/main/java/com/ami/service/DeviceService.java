@@ -1,15 +1,14 @@
 package com.ami.service;
 
 import java.util.List;
-
-import com.ami.dto.requests.CreateDeviceAttributeRequestDto;
-import com.ami.dto.requests.CreateDeviceRequestDto;
+import com.ami.dto.requests.CreateDevicesRequestDto;
 import com.ami.dto.requests.UpdateDeviceLocationRequestDto;
 import com.ami.dto.requests.UpdateDeviceRequestDto;
 import com.ami.dto.responses.DashboardSummaryResponseDto;
-import com.ami.dto.responses.DeviceAttributeResponseDto;
+import com.ami.dto.responses.DeviceAuditResponseDto;
 import com.ami.dto.responses.DeviceDetailsResponseDto;
 import com.ami.dto.responses.DeviceResponseDto;
+import com.ami.dto.responses.DeviceUpdateFormResponseDto;
 import com.ami.dto.responses.PagedDeviceResponseDto;
 import com.ami.enums.DeviceStatus;
 import com.ami.enums.SourceType;
@@ -17,7 +16,7 @@ import com.ami.enums.TechnologyType;
 
 public interface DeviceService {
 
-	DeviceResponseDto createDevice(CreateDeviceRequestDto request);
+	List<DeviceResponseDto> createDevices(CreateDevicesRequestDto request);
 
 	PagedDeviceResponseDto getDevices(int page, int size, String search, DeviceStatus status, SourceType sourceType,
 			TechnologyType technologyType);
@@ -42,8 +41,8 @@ public interface DeviceService {
 
 	DeviceResponseDto updateDeviceLocation(Long deviceId, UpdateDeviceLocationRequestDto request);
 
-	DeviceAttributeResponseDto createAttribute(Long deviceId, CreateDeviceAttributeRequestDto request);
+	List<DeviceAuditResponseDto> getDeviceAudit(Long deviceId);
 
-	List<DeviceAttributeResponseDto> getDeviceAttributes(Long deviceId); 
+	DeviceUpdateFormResponseDto getDeviceForUpdate(Long deviceId);
 
 }

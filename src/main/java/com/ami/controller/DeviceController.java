@@ -1,8 +1,6 @@
 package com.ami.controller;
 
 import java.util.List;
-
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,15 +11,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.ami.dto.requests.CreateDeviceAttributeRequestDto;
-import com.ami.dto.requests.CreateDeviceRequestDto;
+import com.ami.dto.requests.CreateDevicesRequestDto;
 import com.ami.dto.requests.UpdateDeviceLocationRequestDto;
 import com.ami.dto.requests.UpdateDeviceRequestDto;
 import com.ami.dto.responses.DashboardSummaryResponseDto;
-import com.ami.dto.responses.DeviceAttributeResponseDto;
+import com.ami.dto.responses.DeviceAuditResponseDto;
 import com.ami.dto.responses.DeviceDetailsResponseDto;
 import com.ami.dto.responses.DeviceResponseDto;
+import com.ami.dto.responses.DeviceUpdateFormResponseDto;
 import com.ami.dto.responses.PagedDeviceResponseDto;
 import com.ami.enums.DeviceStatus;
 import com.ami.enums.SourceType;
@@ -40,9 +37,9 @@ public class DeviceController {
 	}
 
 	@PostMapping("/createDevice")
-	public DeviceResponseDto createDevice(@Valid @RequestBody CreateDeviceRequestDto request) {
-		return deviceService.createDevice(request);
-	}
+	public ResponseEntity<List<DeviceResponseDto>> createDevices(@RequestBody CreateDevicesRequestDto request) {
+		return ResponseEntity.ok(deviceService.createDevices(request));
+	} 
 
 	@GetMapping("/getDevices")
 	public ResponseEntity<PagedDeviceResponseDto> getDevices(@RequestParam(defaultValue = "0") int page,
@@ -99,6 +96,11 @@ public class DeviceController {
 		return ResponseEntity.ok("Device restored successfully");
 	}
 
+	@GetMapping("/update-form/{deviceId}")
+	public ResponseEntity<DeviceUpdateFormResponseDto> getDeviceForUpdate(@PathVariable Long deviceId) {
+		return ResponseEntity.ok(deviceService.getDeviceForUpdate(deviceId));
+	}
+
 	@PutMapping("/updateDevice/{deviceId}")
 	public ResponseEntity<DeviceResponseDto> updateDevice(@PathVariable Long deviceId,
 			@RequestBody @Valid UpdateDeviceRequestDto request) {
@@ -111,15 +113,9 @@ public class DeviceController {
 		return ResponseEntity.ok(deviceService.updateDeviceLocation(deviceId, request));
 	}
 
-	@PostMapping("/addAttributes/{deviceId}")
-	public ResponseEntity<DeviceAttributeResponseDto> createAttribute(@PathVariable Long deviceId,
-			@Valid @RequestBody CreateDeviceAttributeRequestDto request) {
-		return ResponseEntity.status(HttpStatus.CREATED).body(deviceService.createAttribute(deviceId, request));
+	@GetMapping("/getAudit/{deviceId}")
+	public ResponseEntity<List<DeviceAuditResponseDto>> getDeviceAudit(@PathVariable Long deviceId) {
+		return ResponseEntity.ok(deviceService.getDeviceAudit(deviceId));
 	}
-
-	@GetMapping("/getAttributes/{deviceId}")
-	public ResponseEntity<List<DeviceAttributeResponseDto>> getDeviceAttributes(@PathVariable Long deviceId) {
-		return ResponseEntity.ok(deviceService.getDeviceAttributes(deviceId));
-	}  
 
 }

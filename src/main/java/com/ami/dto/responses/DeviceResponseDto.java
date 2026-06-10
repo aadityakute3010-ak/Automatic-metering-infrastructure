@@ -1,14 +1,15 @@
 package com.ami.dto.responses;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
-import com.ami.enums.AmrApplicationType;
+import com.ami.enums.ApplicationOfAmi;
 import com.ami.enums.BillingType;
 import com.ami.enums.DeviceStatus;
-import com.ami.enums.ProtocolType;
+import com.ami.enums.DiameterSize;
+import com.ami.enums.AmiApplicationType;
 import com.ami.enums.SourceType;
 import com.ami.enums.TechnologyType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,51 +23,39 @@ public class DeviceResponseDto {
 
     private Long id;
 
+    // Device Identity
+
     private String deviceId;
 
     private String deviceName;
 
-    private TechnologyType technologyType;
-
-    private SourceType sourceType;
+    private String meterName;
 
     private String macAddress;
 
     private String serialNumber;
 
-    private String timezone;
+    // Device Information
 
-    private Integer sampleCount;
+    private TechnologyType technologyType;
 
-    private LocalTime wakeupTime; 
+    private SourceType sourceType;
 
     private DeviceStatus status;
-    
-    private BillingType billingType; 
+
+    // Runtime
 
     private Boolean active;
 
     private Boolean online;
 
-    private String assignedAdminName;
+    private LocalDateTime lastSyncTime;
 
-    private String assignedUserName;
+    // Customer Information
 
-    private LocalDateTime createdAt;
-    
-    private String firmwareVersion;
+    private String customerName;
 
-    private ProtocolType protocolType; 
-
-    private Boolean otaUpdatesEnabled;
-    
-    private Boolean amrEnabled;
-
-    private Double literPerPulse;
-
-    private String diameterSize;
-
-    private String meterLocation;
+    private String customerAddress;
 
     private String buildingOrWing;
 
@@ -74,7 +63,32 @@ public class DeviceResponseDto {
 
     private String zone;
 
+    private String city;
+
+    private String state;
+
+    private String meterLocation;
+    
+    private BillingType billingType; 
+
+    // Meter Information
+    private ApplicationOfAmi applicationOfAmi; 
+
+    private AmiApplicationType amiApplicationType;
+
+    private DiameterSize diameterSize;
+
+    private Double literPerPulse;
+
     private Double meterStartReading;
 
-    private AmrApplicationType amrApplicationType; 
-} 
+    // Assignment
+
+    private String assignedAdminName;
+
+    private String assignedUserName;
+
+    // Audit Information
+
+    private LocalDateTime createdAt;
+}

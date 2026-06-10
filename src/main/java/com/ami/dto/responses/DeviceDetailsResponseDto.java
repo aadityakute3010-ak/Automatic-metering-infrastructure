@@ -1,17 +1,19 @@
 package com.ami.dto.responses;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
+import com.ami.enums.ApplicationOfAmi;
 import com.ami.enums.BillingType;
 import com.ami.enums.DeviceStatus;
-import com.ami.enums.ProtocolType;
+import com.ami.enums.DiameterSize;
+import com.ami.enums.AmiApplicationType;
 import com.ami.enums.SourceType;
 import com.ami.enums.TechnologyType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor; 
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
@@ -20,40 +22,68 @@ import lombok.NoArgsConstructor;
 public class DeviceDetailsResponseDto {
 
     // Header Section
+
     private Long id;
+
     private String deviceId;
+
     private String deviceName;
+
+    private String meterName;
+
     private SourceType sourceType;
+
     private DeviceStatus status;
+
+    private Boolean active;
+
     private Boolean online;
 
     // Basic Information
+
     private String macAddress;
+
     private String serialNumber;
+
     private BillingType billingType;
 
-    // Connectivity
     private TechnologyType technologyType;
-    private String timezone;
-    private LocalTime wakeupTime;
-    private Integer sampleCount; 
 
-    // Firmware Section
-    private String firmwareVersion;
-    private ProtocolType protocolType;
-    private Boolean otaUpdatesEnabled;
     private LocalDateTime lastSyncTime;
 
     // Assignment
-    private String assignedAdmin;
-    private String assignedUser;
-    
-    //Customer/User Details
-    private String customerName;
-    private String customerEmail;
-    private String customerPhoneNo;
 
-    private String address;
+    private String assignedAdmin;
+
+    private String assignedUser;
+
+    // Customer Information
+
+    private String customerName;
+
+    private String customerAddress;
+
+    private String buildingOrWing;
+
+    private String area;
+
+    private String zone;
+
     private String city;
+
     private String state;
+
+    private String meterLocation;
+
+    // Meter Configuration
+
+    private ApplicationOfAmi applicationOfAmi; 
+
+    private AmiApplicationType amiApplicationType;
+
+    private DiameterSize diameterSize;
+
+    private Double literPerPulse;
+
+    private Double meterStartReading;
 }

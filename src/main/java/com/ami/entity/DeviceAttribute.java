@@ -23,12 +23,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @Builder 
 public class DeviceAttribute {
-
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String attributeKey;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "attribute_key_id", nullable = false)
+    private AttributeKey attributeKey;
 
     private String attributeValue;
 

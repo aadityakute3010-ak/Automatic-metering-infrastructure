@@ -32,9 +32,9 @@ public class UserServiceImpl implements UserService {
 	private final UserRepository userRepository;
 
 	private final PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
-	private SecurityUtils securityUtils; 
+	private SecurityUtils securityUtils;
 
 	public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
@@ -123,7 +123,8 @@ public class UserServiceImpl implements UserService {
 
 		// SUPER ADMIN
 		if (loggedInUser.getRole() == RoleType.SUPER_ADMIN) {
-			response.setAllowedRoles(Set.of(RoleType.SUPER_ADMIN, RoleType.ADMIN, RoleType.USER, RoleType.SERVICE_ENGINEER));
+			response.setAllowedRoles(
+					Set.of(RoleType.SUPER_ADMIN, RoleType.ADMIN, RoleType.USER, RoleType.SERVICE_ENGINEER));
 			response.setAllowedSources(Set.of(SourceType.values()));
 			return response;
 		}
@@ -527,7 +528,8 @@ public class UserServiceImpl implements UserService {
 	public String hardDeleteUser(Long userId) {
 
 		User loggedInUser = securityUtils.getLoggedInUser();
-		User targetUser = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("Target user not found"));
+		User targetUser = userRepository.findById(userId)
+				.orElseThrow(() -> new RuntimeException("Target user not found"));
 
 		// SUPER ADMIN DELETE RULES
 		if (targetUser.getRole() == RoleType.SUPER_ADMIN) {
@@ -621,27 +623,26 @@ public class UserServiceImpl implements UserService {
 		return response;
 	}
 
-	@Override 
-	public List<UserListResponseDto> getEligibleAdminsBySource(SourceType sourceType) {
+	@Override
+	public List<UserListResponseDto> getEligibleAdminsBySource(SourceType sourceType, String search) {
 
 		User loggedInUser = securityUtils.getLoggedInUser();
+
 		if (loggedInUser.getRole() != RoleType.SUPER_ADMIN) {
 			throw new RuntimeException("Only Super Admin can view eligible admins");
 		}
-		List<User> admins = userRepository.findAdminsBySourceType(RoleType.ADMIN, sourceType);
+
+		List<User> admins = userRepository.findEligibleAdmins(RoleType.ADMIN, sourceType, search);
+
 		return admins.stream().map(this::mapToUserListResponseDto).toList();
-	} 
-	
+	}
+
 	private UserListResponseDto mapToUserListResponseDto(User user) {
-	    return UserListResponseDto.builder()
-	            .id(user.getId())
-	            .fullName(user.getFirstName()+" "+(user.getLastName() != null ? user.getLastName() : ""))
-	            .email(user.getEmail())
-	            .phoneNo(user.getPhoneNo())
-	            .assignedSources(user.getAssignedSources())
-	            .status(user.getStatus())
-	            .role(user.getRole())
-	            .build();
-	}  
+
+		return UserListResponseDto.builder().id(user.getId())
+				.fullName(user.getFirstName() + " " + (user.getLastName() != null ? user.getLastName() : ""))
+				.email(user.getEmail()).phoneNo(user.getPhoneNo()).assignedSources(user.getAssignedSources())
+				.status(user.getStatus()).role(user.getRole()).build();
+	} 
 
 }

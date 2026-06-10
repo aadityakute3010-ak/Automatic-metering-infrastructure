@@ -97,10 +97,11 @@ public class UserController {
 		return userService.getUsersByStatus(active, page, size);
 	}
 
-	//to get Admins for assigning to Device
+	// to get Admins for assigning to Device
 	@GetMapping("/eligible-admins")
-	public ResponseEntity<List<UserListResponseDto>> getEligibleAdmins(@RequestParam SourceType sourceType) {
-		return ResponseEntity.ok(userService.getEligibleAdminsBySource(sourceType)); 
+	public ResponseEntity<List<UserListResponseDto>> getEligibleAdmins(@RequestParam SourceType sourceType,
+			@RequestParam(required = false) String search) {
+		return ResponseEntity.ok(userService.getEligibleAdminsBySource(sourceType, search));
 	} 
 
-}
+} 

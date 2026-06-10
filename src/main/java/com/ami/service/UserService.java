@@ -41,6 +41,6 @@ public interface UserService {
 
 	PagedUserResponseDto getUsersByStatus(Boolean active, int page, int size);
 
-	List<UserListResponseDto> getEligibleAdminsBySource(SourceType sourceType);
+	List<UserListResponseDto> getEligibleAdminsBySource(SourceType sourceType, String search);
 
-} 
+}
